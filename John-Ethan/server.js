@@ -6,7 +6,8 @@ const express = require('express');
 const PORT = process.env.PORT || 3000;
 const app = express();
 
-// TODO: Install and require the NPM package pg and assign it to a variable called pg.
+// TO/DO: Install and require the NPM package pg and assign it to a variable called pg.
+const pg = require('pg');
 
 // Windows and Linux users: You should have retained the user/password from the pre-work for this course.
 // Your OS may require that your conString (connection string, containing protocol and port, etc.) is composed of additional information including user and password.
@@ -17,8 +18,10 @@ const app = express();
 // Mac:
 // const conString = 'postgres://localhost:5432/kilovolt';
 
-// TODO: Pass the conString into the Client constructor so that the new database interface instance has the information it needs
-const client = new pg.Client();
+// TO/DO: Pass the conString into the Client constructor so that the new database interface instance has the information it needs
+var os = require('os');
+const cs = os.platform() === 'darwin' ? 'postgres://localhost:5432/kilovolt': 'postgres://postgres:1234@localhost:5432/kilovolt';
+const client = new pg.Client(cs);
 
 // REVIEW: Use the client object to connect to our DB.
 client.connect();
@@ -41,8 +44,8 @@ app.get('/new-article', (request, response) => {
 // REVIEW: Routes for making API calls to use CRUD Operations on our database
 app.get('/articles', (request, response, next) => {
   // COMMENT: What number(s) of the full-stack-diagram.png image correspond to this route? Be sure to take into account how the request was initiated, how it was handled, and how the response was delivered. Which method of article.js is interacting with this particular piece of `server.js`? What part of CRUD is being enacted/managed by this particular piece of code?
-  // PUT YOUR RESPONSE HERE
-  client.query('')
+  // The numbers involve are 1, 2, 3, 4 and 5. The user requests information from the server, the server queries from the database, then the database returns the results to the server, which in turn responds to the user. The fetch is the method that is interacting with server.js.
+  client.query(`SELECT * FROM articles;`)
     .then(function(result) {
       response.send(result.rows);
     })
@@ -77,8 +80,18 @@ app.put('/articles/:id', (request, response, next) => {
   // COMMENT: What number(s) of the full-stack-diagram.png image correspond to this route? Be sure to take into account how the request was initiated, how it was handled, and how the response was delivered. Which method of article.js is interacting with this particular piece of `server.js`? What part of CRUD is being enacted/managed by this particular piece of code?
   // PUT YOUR RESPONSE HERE
 
-  let SQL = '';
-  let values = [];
+  let SQL = `UPDATE articles 
+  SET title = $1, author = $2, "authorUrl" = $3, category = $4, "publishedOn" = $5, body = $6
+  WHERE article_id = $7;`;
+  let values = [
+    request.body.title,
+    request.body.author,
+    request.body.authorUrl,
+    request.body.category,
+    request.body.publishedOn,
+    request.body.body,
+    request.params.article_id
+  ];
 
   client.query(SQL, values)
     .then(() => {
