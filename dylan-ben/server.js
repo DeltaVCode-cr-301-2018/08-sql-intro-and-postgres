@@ -78,11 +78,22 @@ app.put('/articles/:id', (request, response, next) => {
   // COMMENT: What number(s) of the full-stack-diagram.png image correspond to this route? Be sure to take into account how the request was initiated, how it was handled, and how the response was delivered. Which method of article.js is interacting with this particular piece of `server.js`? What part of CRUD is being enacted/managed by this particular piece of code?
   // PUT YOUR RESPONSE HERE
 
-  let SQL = '';
-  let values = [];
+  let SQL = `
+    UPDATE articles 
+    SET title=$2
+      , author=$3
+      , "authorUrl"=$4
+      , category=$5
+      , "publishedOn"=$6
+      , body=$7
+    WHERE article_id = $1;
+    `;
+  let values = [request.params.id, request.body.title, request.body.author, request.body.authorUrl, request.body.category, request.body.publishedOn, request.body.body];
 
+  console.log(request.body);
   client.query(SQL, values)
-    .then(() => {
+    .then((result) => {
+      console.log(result);
       response.send('update complete')
     })
     .catch(next);
@@ -106,7 +117,7 @@ app.delete('/articles', (request, response, next) => {
   // COMMENT: What number(s) of the full-stack-diagram.png image correspond to this route? Be sure to take into account how the request was initiated, how it was handled, and how the response was delivered. Which method of article.js is interacting with this particular piece of `server.js`? What part of CRUD is being enacted/managed by this particular piece of code?
   // PUT YOUR RESPONSE HERE
 
-  let SQL = '';
+  let SQL = 'TRUNCATE TABLE articles';
   client.query(SQL)
     .then(() => {
       response.send('Delete complete')
