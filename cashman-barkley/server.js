@@ -13,10 +13,10 @@ const app = express();
 // Your OS may require that your conString (connection string, containing protocol and port, etc.) is composed of additional information including user and password.
 // const conString = 'postgres://USER:PASSWORD@HOST:PORT/DBNAME';
 // For example...
-// const conString = 'postgres://postgres:1234@localhost:5432/kilovolt'
+const conString = 'postgres://postgres:root@localhost:5432/kilovolt'
 
 // Mac:
-const conString = 'postgres://localhost:5432/kilovolt';
+//const conString = 'postgres://localhost:5432/kilovolt';
 
 // TODO: Pass the conString into the Client constructor so that the new database interface instance has the information it needs
 const client = new pg.Client(conString);
@@ -79,8 +79,14 @@ app.put('/articles/:id', (request, response, next) => {
   // PUT YOUR RESPONSE HERE
 
   let SQL = `
-    UPDATE articles SET(title, author, "authorUrl", category, "publishedOn", body)
-    VALUES ($1, $2, $3, $4, $5, $6) WHERE article_id= $7);
+    UPDATE articles SET
+    title = $1,
+    author = $2,
+    "authorUrl" = $3,
+    category = $4,
+    "publishedOn" = $5,
+     body = $6
+     WHERE article_id= $7;
   `;
   let values = [
     request.body.title,
