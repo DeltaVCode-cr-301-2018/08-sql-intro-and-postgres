@@ -45,9 +45,9 @@ Article.fetchAll = callback => {
 // REVIEW: Take a few minutes and review what each of these new methods do in relation to our server and DB
 Article.truncateTable = callback => {
   $.ajax({
-    url: '/articles',
-    method: 'DELETE',
-  })
+      url: '/articles',
+      method: 'DELETE',
+    })
     .then(data => {
       console.log(data);
       if (callback) callback();
@@ -56,13 +56,13 @@ Article.truncateTable = callback => {
 
 Article.prototype.insertRecord = function (callback) {
   $.post('/articles', {
-    author: this.author,
-    authorUrl: this.authorUrl,
-    body: this.body,
-    category: this.category,
-    publishedOn: this.publishedOn,
-    title: this.title
-  })
+      author: this.author,
+      authorUrl: this.authorUrl,
+      body: this.body,
+      category: this.category,
+      publishedOn: this.publishedOn,
+      title: this.title
+    })
     .then(data => {
       console.log(data);
       if (callback) callback();
@@ -71,9 +71,9 @@ Article.prototype.insertRecord = function (callback) {
 
 Article.prototype.deleteRecord = function (callback) {
   $.ajax({
-    url: `/articles/${this.article_id}`,
-    method: 'DELETE'
-  })
+      url: `/articles/${this.article_id}`,
+      method: 'DELETE'
+    })
     .then(data => {
       console.log(data);
       if (callback) callback();
@@ -82,17 +82,17 @@ Article.prototype.deleteRecord = function (callback) {
 
 Article.prototype.updateRecord = function (callback) {
   $.ajax({
-    url: `/articles/${this.article_id}`,
-    method: 'PUT',
-    data: {
-      author: this.author,
-      authorUrl: this.authorUrl,
-      body: this.body,
-      category: this.category,
-      publishedOn: this.publishedOn,
-      title: this.title
-    }
-  })
+      url: `/articles/${this.article_id}`,
+      method: 'PUT',
+      data: {
+        author: this.author,
+        authorUrl: this.authorUrl,
+        body: this.body,
+        category: this.category,
+        publishedOn: this.publishedOn,
+        title: this.title
+      }
+    })
     .then(data => {
       console.log(data);
       if (callback) callback();

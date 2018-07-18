@@ -134,7 +134,7 @@ app.delete('/articles', (request, response, next) => {
   // 2,3,4, and 5.
   //The truncateTable function would be interacting here to delete all the articles in the database.
 
-  let SQL = '';
+  let SQL = 'DELETE from articles';
   client.query(SQL)
     .then(() => {
       response.send('Delete complete')
