@@ -93,26 +93,28 @@ _Your repository must include:_
 _Your README.md must include:_
 
 ```md
-# Project Name
+# sql victorious.
 
-**Author**: Your Name Goes Here
+**Author**: Nathan and Craig
 **Version**: 1.0.0 (increment the patch/fix version number up if you make more commits past your first submission)
 
-## Overview
-<!-- Provide a high level overview of what this application is and why you are building it, beyond the fact that it's an assignment for a Code Fellows 301 class. (i.e. What's your problem domain?) -->
+## Overview is to add js to server.js file to create update insert and delete a database record.
 
 ## Getting Started
-<!-- What are the steps that a user must take in order to build this app on their own machine and get it running? -->
+## install and require the NPM PostgreSQL package pg in your server.js file.
+## Make sure to complete the connection string.
 
-## Architecture
-<!-- Provide a detailed description of the application design. What technologies (languages, libraries, etc) you're using, and any other relevant design information. -->
+    ## Windows and Linux users: You should have retained the user/password from the pre-work for this course. Your OS may require that your connection string is composed of additional information including user and password. For example: const conString = 'postgres://USER:PASSWORD@HOST:PORT/DBNAME';
+    Mac users: const conString = 'postgres://localhost:5432';
+
+## Pass the appropriate argument when instantiating a new Client. The articleView.js methods are different now that we are not accessing the JSON file directly, and instead retrieving the articles from a database. Therefore, we no longer need to import the JSON in article.js, so all of the code in article.fetchAll() that was involved in performing this action has been removed. Furthermore, the code that cached data into local storage has been removed to simplify things for the time being.
+
+## Architecture javascript node.js, postgre, sql.
 
 ## Change Log
 <!-- Use this are to document the iterative changes made to your application as each feature is successfully implemented. Use time stamps. Here's an examples:
 
 01-01-2001 4:59pm - Application now has a fully-functional express server, with GET and POST routes for the book resource.
 
-## Credits and Collaborations
-<!-- Give credit (and a link) to other people or resources that helped you build this application. -->
--->
+## Credits and Collaborations keith, david, jess moral sql support, Nathan is not risk averse. 
 ```
