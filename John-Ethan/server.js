@@ -20,7 +20,7 @@ const pg = require('pg');
 
 // TO/DO: Pass the conString into the Client constructor so that the new database interface instance has the information it needs
 var os = require('os');
-const cs = os.platform() === 'darwin' ? 'postgres://localhost:5432/kilovolt': 'postgres://postgres:1234@localhost:5432/kilovolt';
+const cs = os.platform() === 'darwin' ? 'postgres://localhost:5432/kilovolt': 'postgres://postgres:postgres@localhost:5432/kilovolt';
 const client = new pg.Client(cs);
 
 // REVIEW: Use the client object to connect to our DB.
@@ -36,7 +36,7 @@ app.use(express.static('./public'));
 // REVIEW: Routes for requesting HTML resources
 app.get('/new-article', (request, response) => {
   // COMMENT: What number(s) of the full-stack-diagram.png image correspond to this route? Be sure to take into account how the request was initiated, how it was handled, and how the response was delivered. Which method of article.js, if any, is interacting with this particular piece of `server.js`? What part of CRUD, if any, is being enacted/managed by this particular piece of code?
-  // PUT YOUR RESPONSE HERE
+  // This is steps 2 & 5, called from initNewArticlePage. This is read.
   response.sendFile('new.html', { root: './public' });
 });
 
@@ -54,7 +54,7 @@ app.get('/articles', (request, response, next) => {
 
 app.post('/articles', (request, response, next) => {
   // COMMENT: What number(s) of the full-stack-diagram.png image correspond to this route? Be sure to take into account how the request was initiated, how it was handled, and how the response was delivered. Which method of article.js is interacting with this particular piece of `server.js`? What part of CRUD is being enacted/managed by this particular piece of code?
-  // PUT YOUR RESPONSE HERE
+  // This is steps 1-5, called from article.insertRecord. This is create.
   let SQL = `
     INSERT INTO articles(title, author, "authorUrl", category, "publishedOn", body)
     VALUES ($1, $2, $3, $4, $5, $6);
@@ -78,7 +78,7 @@ app.post('/articles', (request, response, next) => {
 
 app.put('/articles/:id', (request, response, next) => {
   // COMMENT: What number(s) of the full-stack-diagram.png image correspond to this route? Be sure to take into account how the request was initiated, how it was handled, and how the response was delivered. Which method of article.js is interacting with this particular piece of `server.js`? What part of CRUD is being enacted/managed by this particular piece of code?
-  // PUT YOUR RESPONSE HERE
+  // This is 1-5, from updateRecord. This is Update.
 
   let SQL = `UPDATE articles 
   SET title = $1, author = $2, "authorUrl" = $3, category = $4, "publishedOn" = $5, body = $6
@@ -102,7 +102,7 @@ app.put('/articles/:id', (request, response, next) => {
 
 app.delete('/articles/:id', (request, response, next) => {
   // COMMENT: What number(s) of the full-stack-diagram.png image correspond to this route? Be sure to take into account how the request was initiated, how it was handled, and how the response was delivered. Which method of article.js is interacting with this particular piece of `server.js`? What part of CRUD is being enacted/managed by this particular piece of code?
-  // PUT YOUR RESPONSE HERE
+  // Here we are doing the D in CRUD. This is in the database as well so numbers 1-5.
 
   let SQL = `DELETE FROM articles WHERE article_id=$1;`;
   let values = [request.params.id];
@@ -116,9 +116,9 @@ app.delete('/articles/:id', (request, response, next) => {
 
 app.delete('/articles', (request, response, next) => {
   // COMMENT: What number(s) of the full-stack-diagram.png image correspond to this route? Be sure to take into account how the request was initiated, how it was handled, and how the response was delivered. Which method of article.js is interacting with this particular piece of `server.js`? What part of CRUD is being enacted/managed by this particular piece of code?
-  // PUT YOUR RESPONSE HERE
+  // Again we have 1-5 deleting the entire database tho.
 
-  let SQL = '';
+  let SQL = `DELETE FROM articles;`;
   client.query(SQL)
     .then(() => {
       response.send('Delete complete')
@@ -127,7 +127,7 @@ app.delete('/articles', (request, response, next) => {
 });
 
 // COMMENT: What is this function invocation doing?
-// PUT YOUR RESPONSE HERE
+// This is creating our table in the first place.
 loadDB();
 
 app.listen(PORT, () => {
@@ -139,7 +139,7 @@ app.listen(PORT, () => {
 ////////////////////////////////////////
 function loadArticles() {
   // COMMENT: What number(s) of the full-stack-diagram.png image correspond to this route? Be sure to take into account how the request was initiated, how it was handled, and how the response was delivered. Which method of article.js is interacting with this particular piece of `server.js`? What part of CRUD is being enacted/managed by this particular piece of code?
-  // PUT YOUR RESPONSE HERE
+  // This is both creating and reading in the database. 3-5.
 
   let SQL = 'SELECT COUNT(*) FROM articles';
   client.query(SQL)
@@ -164,7 +164,7 @@ function loadArticles() {
 
 function loadDB() {
   // COMMENT: What number(s) of the full-stack-diagram.png image correspond to this route? Be sure to take into account how the request was initiated, how it was handled, and how the response was delivered. Which method of article.js is interacting with this particular piece of `server.js`? What part of CRUD is being enacted/managed by this particular piece of code?
-  // PUT YOUR RESPONSE HERE
+  // This is 3 & 4, simply creating something in the database
   client.query(`
     CREATE TABLE IF NOT EXISTS articles (
       article_id SERIAL PRIMARY KEY,
