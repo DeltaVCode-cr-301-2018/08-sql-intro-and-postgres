@@ -13,10 +13,10 @@ const app = express();
 // Your OS may require that your conString (connection string, containing protocol and port, etc.) is composed of additional information including user and password.
 // const conString = 'postgres://USER:PASSWORD@HOST:PORT/DBNAME';
 // For example...
-// const conString = 'postgres://postgres:1234@localhost:5432/kilovolt'
+const conString = 'postgres://postgres:root@localhost:5432/kilovolt'
 
 // Mac:
-const conString = 'postgres://localhost:5432/kilovolt';
+//const conString = 'postgres://localhost:5432/kilovolt';
 
 // TODO: Pass the conString into the Client constructor so that the new database interface instance has the information it needs
 const client = new pg.Client(conString);
@@ -75,12 +75,24 @@ app.post('/articles', (request, response, next) => {
 });
 
 app.put('/articles/:id', (request, response, next) => {
-  // COMMENT: What number(s) of the full-stack-diagram.png image correspond to this route? Be sure to take into account how the request was initiated, how it was handled, and how the response was delivered. Which method of article.js is interacting with this particular piece of `server.js`? What part of CRUD is being enacted/managed by this particular piece of code?
-  // PUT YOUR RESPONSE HERE
+  // COMMENT: What number(s) of the full-stack-diagram.png image correspond to this route?
+  //2.3.4.5 steps in the diagram
+  //Be sure to take into account how the request was initiated, 
+  // how it was handled, and how the response was delivered.
+  // Which method of article.js is interacting with this particular piece of `server.js`? 
+  //Article.prototpe.update.record
+  //What part of CRUD is being enacted/managed by this particular piece of code?
+  // update PUT.
 
   let SQL = `
-    UPDATE articles SET(title, author, "authorUrl", category, "publishedOn", body)
-    VALUES ($1, $2, $3, $4, $5, $6) WHERE article_id= $7);
+    UPDATE articles SET
+    title = $1,
+    author = $2,
+    "authorUrl" = $3,
+    category = $4,
+    "publishedOn" = $5,
+     body = $6
+     WHERE article_id= $7;
   `;
   let values = [
     request.body.title,
@@ -101,7 +113,7 @@ app.put('/articles/:id', (request, response, next) => {
 
 app.delete('/articles/:id', (request, response, next) => {
   // COMMENT: What number(s) of the full-stack-diagram.png image correspond to this route? Be sure to take into account how the request was initiated, how it was handled, and how the response was delivered. Which method of article.js is interacting with this particular piece of `server.js`? What part of CRUD is being enacted/managed by this particular piece of code?
-  // PUT YOUR RESPONSE HERE
+  // 2.3.4.5    Delete Record and truncate table.
 
   let SQL = `DELETE FROM articles WHERE article_id=$1;`;
   let values = [request.params.id];
@@ -115,7 +127,7 @@ app.delete('/articles/:id', (request, response, next) => {
 
 app.delete('/articles', (request, response, next) => {
   // COMMENT: What number(s) of the full-stack-diagram.png image correspond to this route? Be sure to take into account how the request was initiated, how it was handled, and how the response was delivered. Which method of article.js is interacting with this particular piece of `server.js`? What part of CRUD is being enacted/managed by this particular piece of code?
-  // PUT YOUR RESPONSE HERE
+  // 2. 3. 4. 5. DELETE  and truncate.  
 
   let SQL = 'DELETE FROM articles';
   client.query(SQL)
@@ -126,7 +138,7 @@ app.delete('/articles', (request, response, next) => {
 });
 
 // COMMENT: What is this function invocation doing?
-// PUT YOUR RESPONSE HERE
+// Loading our database function down below.
 loadDB();
 
 app.listen(PORT, () => {
@@ -138,7 +150,7 @@ app.listen(PORT, () => {
 ////////////////////////////////////////
 function loadArticles() {
   // COMMENT: What number(s) of the full-stack-diagram.png image correspond to this route? Be sure to take into account how the request was initiated, how it was handled, and how the response was delivered. Which method of article.js is interacting with this particular piece of `server.js`? What part of CRUD is being enacted/managed by this particular piece of code?
-  // PUT YOUR RESPONSE HERE
+  // update read, interacting with article.js 2.3.4.5.
 
   let SQL = 'SELECT COUNT(*) FROM articles';
   client.query(SQL)
@@ -163,7 +175,7 @@ function loadArticles() {
 
 function loadDB() {
   // COMMENT: What number(s) of the full-stack-diagram.png image correspond to this route? Be sure to take into account how the request was initiated, how it was handled, and how the response was delivered. Which method of article.js is interacting with this particular piece of `server.js`? What part of CRUD is being enacted/managed by this particular piece of code?
-  // PUT YOUR RESPONSE HERE
+  // interacting with article.js  2.3.4.5. Create databaseit 
   client.query(`
     CREATE TABLE IF NOT EXISTS articles (
       article_id SERIAL PRIMARY KEY,
