@@ -14,7 +14,7 @@ const pg = require('pg');
 // For example...
 // const conString = 'postgres://postgres:1234@localhost:5432/kilovolt'
 const conString = process.env.POSTGRES ||
-    'postgres://postgres:wilddog234@localhost:5432/kilovolt'
+  'postgres://postgres:wilddog234@localhost:5432/kilovolt'
 // Mac:
 // const conString = 'postgres://localhost:5432/kilovolt';
 
@@ -27,9 +27,11 @@ client.connect();
 
 // REVIEW: Install the middleware plugins so that our app can parse the request body
 app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
-app.use(express.static('./public'));
+app.use(express.urlencoded({
+  extended: true
+}));
 
+app.use(express.static('./public'));
 
 // REVIEW: Routes for requesting HTML resources
 app.get('/new-article', (request, response) => {
@@ -38,7 +40,9 @@ app.get('/new-article', (request, response) => {
   //We make a request to /new-article, the server checks the public folder for the new.html and if found it displas the new.html page. The page is delivered so the status would be 200. 
   //The toHtml method is used to display the article preview.
   //The insertRecord method will be used to add the form data to the database.
-  response.sendFile('new.html', { root: './public' });
+  response.sendFile('new.html', {
+    root: './public'
+  });
 });
 
 
@@ -48,8 +52,9 @@ app.get('/articles', (request, response, next) => {
   // The toHtml method is used to display all of the articles.
   //The fetchAll and loadAll functions are used to sort the data, creates new article objects, and pushes them into an array called all.
   //2,3,4, and 5.
-  client.query('')
-    .then(function(result) {
+  let SQL = `SELECT * FROM articles;`;
+  client.query(SQL)
+    .then(function (result) {
       response.send(result.rows);
     })
     .catch(next)
@@ -71,10 +76,10 @@ app.post('/articles', (request, response, next) => {
     request.body.category,
     request.body.publishedOn,
     request.body.body
-  ]
+  ];
 
   client.query(SQL, values)
-    .then(function() {
+    .then(function () {
       response.send('insert complete')
     })
     .catch(next);
@@ -84,9 +89,23 @@ app.put('/articles/:id', (request, response, next) => {
   // COMMENT: What number(s) of the full-stack-diagram.png image correspond to this route? Be sure to take into account how the request was initiated, how it was handled, and how the response was delivered. Which method of article.js is interacting with this particular piece of `server.js`? What part of CRUD is being enacted/managed by this particular piece of code?
   // 2,3,4, and 5.
   //The updateRecord method is interacting with this part of the code to update the values of existing record.
-
-  let SQL = '';
-  let values = [];
+  let SQL = `UPDATE articles SET 
+    title = $1,
+    author = $2,
+    "authorUrl" = $3,
+    category = $4,
+    "publishedOn" = $5,
+    body = $6
+    WHERE article_id = $7;`;
+  let values = [
+    request.body.title,
+    request.body.author,
+    request.body.authorUrl,
+    request.body.category,
+    request.body.publishedOn,
+    request.body.body,
+    request.params.id
+  ];
 
   client.query(SQL, values)
     .then(() => {
